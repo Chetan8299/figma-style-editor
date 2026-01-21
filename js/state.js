@@ -26,6 +26,10 @@ export function addElement(type) {
     saveElemsData()
 }
 
+export function updateElement(elem) {
+    elemsData.elements = elemsData.elements.map(e => e.id == elem.id ? { ...e, ...elem } : e);
+}
+
 export function selectElement(id) {
     elemsData.selectedElementId = id;
     saveElemsData()
