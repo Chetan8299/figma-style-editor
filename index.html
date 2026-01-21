@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.8.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/elements.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/panels.css">
+</head>
+
+<body>
+    <header class="toolbar">
+        <button id="add-rect" title="Add Rectangle"><i class="ri-rectangle-line"></i></button>
+        <button id="add-text" title="Add Text"><i class="ri-t-box-line"></i></button>
+        <button id="export-json" title="Export as JSON"><i class="ri-file-code-line"></i></button>
+        <button id="export-html" title="Export as HTML"><i class="ri-html5-fill"></i></button>
+    </header>
+    <main class="editor">
+        <!-- canvas -->
+        <div id="canvas"></div>
+
+        <aside class="panel layers-panel">
+            <h3>Layers</h3>
+            <ul id="layers-list"></ul>
+            <div class="layer-controls">
+                <button id="layer-up">Move Up</button>
+                <button id="layer-down">Move Down</button>
+            </div>
+
+            <section class="panel properties-panel">
+                <h3>Properties</h3>
+
+                <label>
+                    Width
+                    <input type="number" id="prop-width">
+                </label>
+
+                <label>
+                    Height
+                    <input type="number" id="prop-height">
+                </label>
+
+                <label>
+                    Background
+                    <input type="color" id="prop-bg">
+                </label>
+
+                <label>
+                    Text
+                    <input type="text" id="prop-text">
+                </label>
+            </section>
+        </aside>
+
+
+    </main>
+
+    <script type="module" src="js/state.js"></script>
+    <script type="module" src="js/app.js"></script>
+</body>
+
+</html>

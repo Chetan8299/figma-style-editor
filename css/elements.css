@@ -1,0 +1,23 @@
+.toolbar button {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #3a3a3a;
+    border: none;
+    border-radius: 0.5rem;
+    color: #eaeaea;
+    transition: all 0.2s ease-in-out, transform 0.1s ease-in-out;
+    font-size: 1.2rem;
+}
+
+.toolbar button:hover {
+    background-color: #4a4a4a;
+    color: #fff;
+    transform: scale(1.05);
+}
+
+.toolbar button:active {
+    transform: scale(0.95);
+}
