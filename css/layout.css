@@ -9,12 +9,10 @@
     border-radius: 0.5rem;
     position: fixed;
     top: 3%;
-    left: 50%;
+    left: 40%;
     transform: translateX(-50%);
     z-index: 1000;
 }
-
-
 
 .editor {
     height: 100%;
@@ -27,6 +25,8 @@
     width: 80%;
     height: 100%;
     padding-top: calc(4.5rem + 3%);
+    position: relative;
+    overflow: hidden;
 }
 
 .editor aside {

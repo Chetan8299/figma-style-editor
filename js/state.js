@@ -15,9 +15,10 @@ export function addElement(type) {
         type,
         x: 0,
         y: 0,
+        width: 50,
+        height: 50,
         styles: {
-            width: "50px",
-            height: "50px",
+
             zIndex: elemsData.elements.length + 1,
             backgroundColor: "white",
             color: "black"
@@ -28,6 +29,7 @@ export function addElement(type) {
 
 export function updateElement(elem) {
     elemsData.elements = elemsData.elements.map(e => e.id == elem.id ? { ...e, ...elem } : e);
+    saveElemsData();
 }
 
 export function selectElement(id) {
@@ -39,5 +41,11 @@ export function deSelectElement() {
     elemsData.selectedElementId = null;
     saveElemsData()
 }
+
+export function deleteElement(id) {
+    elemsData.elements = elemsData.elements.filter(e => e.id != id)
+    elemsData.selectedElementId = null
+}
+
 export default elemsData;
 

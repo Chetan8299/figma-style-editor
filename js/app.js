@@ -1,4 +1,4 @@
-import elemsData, { addElement, selectElement, deSelectElement, updateElement } from "./state.js";
+import elemsData, { addElement, selectElement, deSelectElement, updateElement, deleteElement } from "./state.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const addRectBtn = document.getElementById("add-rect");
@@ -25,8 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         selectElement(el.id);
         renderElements();
-
-
     })
 
     let isDragging = false;
@@ -34,10 +32,21 @@ document.addEventListener("DOMContentLoaded", () => {
     let startMouseY = 0;
     let startElemX = 0;
     let startElemY = 0;
+    let isResizing = false;
+    let resizeDirection = "tl";
+    let startHeight = 0;
+    let startWidth = 0;
 
     canvas.addEventListener("mousedown", (e) => {
+        let handle = e.target.closest(".handle");
+        if (handle) {
+            e.stopPropagation()
+            isResizing = true;
+            resizeDirection = handle.dataset.dir;
+        }
         const el = e.target.closest(".canvas-element");
         if (!el) return;
+        if (!isResizing) isDragging = true;
 
         selectElement(Number(el.id));
 
@@ -50,13 +59,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         startElemX = elemData.x;
         startElemY = elemData.y;
-
-        isDragging = true;
+        startWidth = elemData.width;
+        startHeight = elemData.height;
     })
 
     canvas.addEventListener("mousemove", (e) => {
-        if (!isDragging || elemsData.selectedElementId === null)
-            return;
+        if (!isResizing && !isDragging) return;
 
         const elemData = elemsData.elements.find(e => e.id === elemsData.selectedElementId)
 
@@ -68,40 +76,96 @@ document.addEventListener("DOMContentLoaded", () => {
         const dx = currentMouseX - startMouseX;
         const dy = currentMouseY - startMouseY;
 
-        console.log(dx, dy)
+        if (isResizing) {
+            let w = startWidth;
+            let h = startHeight;
+            let x = startElemX;
+            let y = startElemY;
+
+            if (resizeDirection === "br") {
+                w += dx;
+                h += dy;
+            }
+            if (resizeDirection === "bl") {
+                w -= dx;
+                h += dy;
+                x += dx;
+            }
+            if (resizeDirection === "tr") {
+                w += dx;
+                h -= dy;
+                y += dy;
+            }
+            if (resizeDirection === "tl") {
+                w -= dx;
+                h -= dy;
+                x += dx;
+                y += dy;
+            }
+
+            w = Math.max(20, w);
+            h = Math.max(20, h);
+            updateElement({ id: elemData.id, x, y, width: w, height: h });
+            renderElements();
+            return;
+        }
+
+        if (!isDragging || elemsData.selectedElementId === null)
+            return;
         updateElement({ id: elemData.id, x: startElemX + dx, y: startElemY + dy });
 
         renderElements();
-
     })
 
     document.addEventListener("mouseup", elem => {
         isDragging = false;
+        isResizing = false;
+        resizeDirection = null;
     })
 
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Delete") {
+            deleteElement(elemsData.selectedElementId)
+            renderElements()
+        }
+    })
 })
 
 function renderElements() {
     const canvas = document.getElementById("canvas");
     canvas.innerHTML = "";
 
-    elemsData.elements.forEach(({ id, type, x, y, styles }) => {
+    elemsData.elements.forEach(({ id, type, x, y, width, height, styles }) => {
         const div = document.createElement("div")
         div.id = id;
         div.classList.add("canvas-element", type);
         div.style.position = "absolute";
         div.style.left = x + "px";
         div.style.top = y + "px";
+        // Ensure width and height are numbers with "px" unit
+        div.style.width = (typeof width === 'number' ? width : parseFloat(width)) + "px";
+        div.style.height = (typeof height === 'number' ? height : parseFloat(height)) + "px";
         div.textContent = type == "text" ? type : "";
         for (let key in styles) {
             div.style[key] = styles[key];
         }
 
         if (elemsData.selectedElementId == id) {
+            const positions = ["tl", "tr", "bl", "br"];
+
+            positions.forEach(pos => {
+                const handle = document.createElement("div");
+                handle.classList.add("handle", pos);
+                handle.dataset.dir = pos;
+                div.appendChild(handle);
+            })
             div.classList.add("selected-elem")
         }
+
+
         canvas.appendChild(div);
     })
 }
+
 
 renderElements()

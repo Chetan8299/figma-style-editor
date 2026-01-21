@@ -25,3 +25,33 @@
 .selected-elem {
     outline: 2px solid #0c8ce9;
 }
+
+.handle {
+    height: 0.6rem;
+    width: 0.6rem;
+    background-color: white;
+    border: 1px solid #0c8ce9;
+    position: absolute;
+    z-index: 10000;
+}
+
+.tl {
+    top: -0.5rem;
+    left: -0.5rem;
+    cursor: nwse-resize;
+}
+.tr {
+    top: -0.5rem;
+    right: -0.5rem;
+    cursor: nesw-resize;
+}
+.bl {
+    bottom: -0.5rem;
+    left: -0.5rem;
+    cursor: nesw-resize;
+}
+.br {
+    bottom: -0.5rem;
+    right: -0.5rem;
+    cursor: nwse-resize; 
+}
