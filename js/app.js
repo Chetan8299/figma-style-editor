@@ -124,10 +124,20 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 
     document.addEventListener("keydown", (e) => {
+        const elemData = elemsData.elements.find(e => e.id == elemsData.selectedElementId);
+
         if (e.key === "Delete") {
             deleteElement(elemsData.selectedElementId)
-            renderElements()
+        } else if (e.key === "ArrowUp") {
+            updateElement({...elemData, y: elemData.y - 7 });
+        } else if (e.key === "ArrowDown") {
+            updateElement({...elemData, y: elemData.y + 7 });
+        } else if (e.key === "ArrowLeft") {
+            updateElement({...elemData, x: elemData.x - 7 });
+        } else if (e.key === "ArrowRight") {
+            updateElement({...elemData, x: elemData.x + 7 });
         }
+        renderElements()
     })
 })
 
@@ -142,7 +152,6 @@ function renderElements() {
         div.style.position = "absolute";
         div.style.left = x + "px";
         div.style.top = y + "px";
-        // Ensure width and height are numbers with "px" unit
         div.style.width = (typeof width === 'number' ? width : parseFloat(width)) + "px";
         div.style.height = (typeof height === 'number' ? height : parseFloat(height)) + "px";
         div.textContent = type == "text" ? type : "";

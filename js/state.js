@@ -45,6 +45,7 @@ export function deSelectElement() {
 export function deleteElement(id) {
     elemsData.elements = elemsData.elements.filter(e => e.id != id)
     elemsData.selectedElementId = null
+    saveElemsData()
 }
 
 export default elemsData;
