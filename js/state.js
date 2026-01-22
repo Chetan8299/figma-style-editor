@@ -8,7 +8,6 @@ function saveElemsData() {
     localStorage.setItem("elemsData", JSON.stringify(elemsData));
 }
 
-console.log(JSON.parse(localStorage.getItem("elemsData")))
 export function addElement(type) {
     elemsData.elements.push({
         id: elemsData.nextId++,
@@ -17,8 +16,8 @@ export function addElement(type) {
         y: 0,
         width: 50,
         height: 50,
+        rotation: 0,
         styles: {
-
             zIndex: elemsData.elements.length + 1,
             backgroundColor: "white",
             color: "black"

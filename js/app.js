@@ -36,17 +36,24 @@ document.addEventListener("DOMContentLoaded", () => {
     let resizeDirection = "tl";
     let startHeight = 0;
     let startWidth = 0;
+    let isRotating = false;
+    let startAngle = 0;
+    let startRotation = 0;
+    let centerX, centerY;
 
     canvas.addEventListener("mousedown", (e) => {
+        let rotationHandle = e.target.closest(".rotation-handle");
+        if (rotationHandle) isRotating = true;
+
         let handle = e.target.closest(".handle");
-        if (handle) {
+        if (handle && !isRotating) {
             e.stopPropagation()
             isResizing = true;
             resizeDirection = handle.dataset.dir;
         }
         const el = e.target.closest(".canvas-element");
         if (!el) return;
-        if (!isResizing) isDragging = true;
+        if (!isResizing && !isRotating) isDragging = true;
 
         selectElement(Number(el.id));
 
@@ -59,12 +66,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
         startElemX = elemData.x;
         startElemY = elemData.y;
+
         startWidth = elemData.width;
         startHeight = elemData.height;
+
+        centerX = elemData.x + elemData.width / 2;
+        centerY = elemData.y + elemData.height / 2;
+
+        startAngle = Math.atan2(startMouseY - centerY, startMouseX - centerX) * 180 / Math.PI;
+        startRotation = elemData.rotation;
     })
 
     canvas.addEventListener("mousemove", (e) => {
-        if (!isResizing && !isDragging) return;
+        if (!isResizing && !isDragging && !isRotating) return;
 
         const elemData = elemsData.elements.find(e => e.id === elemsData.selectedElementId)
 
@@ -75,6 +89,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const dx = currentMouseX - startMouseX;
         const dy = currentMouseY - startMouseY;
+
+        if (isRotating) {
+            const angleNow = Math.atan2(currentMouseY - centerY, currentMouseX - centerX) * 180 / Math.PI;
+
+            const deltaAngle = angleNow - startAngle;
+
+            updateElement({
+                id: elemData.id,
+                rotation: startRotation + deltaAngle
+            });
+
+            renderElements();
+            return;
+        }
 
         if (isResizing) {
             let w = startWidth;
@@ -106,6 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
             w = Math.max(20, w);
             h = Math.max(20, h);
             updateElement({ id: elemData.id, x, y, width: w, height: h });
+
             renderElements();
             return;
         }
@@ -113,14 +142,15 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!isDragging || elemsData.selectedElementId === null)
             return;
         updateElement({ id: elemData.id, x: startElemX + dx, y: startElemY + dy });
-
         renderElements();
     })
 
     document.addEventListener("mouseup", elem => {
         isDragging = false;
         isResizing = false;
+        isRotating = false;
         resizeDirection = null;
+
     })
 
     document.addEventListener("keydown", (e) => {
@@ -128,9 +158,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const elem = document.getElementById(elemsData.selectedElementId);
 
         const canvasRect = canvas.getBoundingClientRect();
-
-        console.log(canvasRect.width)
-        console.log(elem.style.top)
 
         const elemWidth = parseInt(elem.style.width)
         const elemHeight = parseInt(elem.style.height);
@@ -154,7 +181,7 @@ function renderElements() {
     const canvas = document.getElementById("canvas");
     canvas.innerHTML = "";
 
-    elemsData.elements.forEach(({ id, type, x, y, width, height, styles }) => {
+    elemsData.elements.forEach(({ id, type, x, y, width, height, rotation, styles }) => {
         const div = document.createElement("div")
         div.id = id;
         div.classList.add("canvas-element", type);
@@ -163,6 +190,7 @@ function renderElements() {
         div.style.top = y + "px";
         div.style.width = (typeof width === 'number' ? width : parseFloat(width)) + "px";
         div.style.height = (typeof height === 'number' ? height : parseFloat(height)) + "px";
+        div.style.transform = `rotate(${Math.floor(rotation)}deg)`;
         div.textContent = type == "text" ? type : "";
         for (let key in styles) {
             div.style[key] = styles[key];
@@ -177,6 +205,11 @@ function renderElements() {
                 handle.dataset.dir = pos;
                 div.appendChild(handle);
             })
+
+            const rotationHandle = document.createElement("div");
+            rotationHandle.classList.add("rotation-handle")
+            rotationHandle.dataset.type = "rotate";
+            div.appendChild(rotationHandle);
             div.classList.add("selected-elem")
         }
 
