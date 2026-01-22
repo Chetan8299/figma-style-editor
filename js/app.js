@@ -125,17 +125,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.addEventListener("keydown", (e) => {
         const elemData = elemsData.elements.find(e => e.id == elemsData.selectedElementId);
+        const elem = document.getElementById(elemsData.selectedElementId);
+
+        const canvasRect = canvas.getBoundingClientRect();
+
+        console.log(canvasRect.width)
+        console.log(elem.style.top)
+
+        const elemWidth = parseInt(elem.style.width)
+        const elemHeight = parseInt(elem.style.height);
 
         if (e.key === "Delete") {
             deleteElement(elemsData.selectedElementId)
         } else if (e.key === "ArrowUp") {
-            updateElement({...elemData, y: elemData.y - 7 });
+            updateElement({ ...elemData, y: Math.max(elemData.y - 7, 0) });
         } else if (e.key === "ArrowDown") {
-            updateElement({...elemData, y: elemData.y + 7 });
+            updateElement({ ...elemData, y: Math.min(elemData.y + 7, canvasRect.height - elemHeight) });
         } else if (e.key === "ArrowLeft") {
-            updateElement({...elemData, x: elemData.x - 7 });
+            updateElement({ ...elemData, x: Math.max(elemData.x - 7, 0) });
         } else if (e.key === "ArrowRight") {
-            updateElement({...elemData, x: elemData.x + 7 });
+            updateElement({ ...elemData, x: Math.min(elemData.x + 7, canvasRect.width - elemWidth) });
         }
         renderElements()
     })
