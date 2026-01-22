@@ -9,7 +9,7 @@ function saveElemsData() {
 }
 
 export function addElement(type) {
-    elemsData.elements.push({
+    const newElement = {
         id: elemsData.nextId++,
         type,
         x: 0,
@@ -18,10 +18,16 @@ export function addElement(type) {
         height: 50,
         rotation: 0,
         styles: {
-            backgroundColor: "white",
-            color: "black"
+            backgroundColor: "#fff",
+            color: "#000000"
         }
-    });
+    };
+
+    if (type === "text") {
+        newElement.text = "text";
+    }
+
+    elemsData.elements.push(newElement);
     saveElemsData()
 }
 
@@ -67,7 +73,7 @@ export function moveUp(id) {
 export function moveDown(id) {
     let idx = getElementIndexById(id);
     let newElements = elemsData.elements;
-    if (idx >= newElements.length - 1) return; // Already at the bottom
+    if (idx >= newElements.length - 1) return;
     [newElements[idx + 1], newElements[idx]] = [newElements[idx], newElements[idx + 1]];
     elemsData.elements = newElements;
     saveElemsData();

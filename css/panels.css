@@ -1,0 +1,11 @@
+.height, .width {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+.props-container {
+    display: flex;
+    flex-direction: column;
+}

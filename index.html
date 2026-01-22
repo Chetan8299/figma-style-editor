@@ -24,38 +24,54 @@
         <div id="canvas"></div>
 
         <aside class="panel layers-panel">
+            <section class="panel properties-panel">
+                <h3>Properties</h3>
+
+                <div class="props-container">
+                    <label class="width">
+                        <div>Width</div>
+                        <input type="number" id="prop-width">
+                    </label>
+
+                    <label class="height">
+                        <div>Height</div>
+                        <input type="number" id="prop-height">
+                    </label>
+
+                    <label class="bgc">
+                        Background
+                        <div style="display: flex; gap: 4px; align-items: center;">
+                            <input type="text" id="prop-bg" placeholder="#fff or rgba(255,255,255,1)" style="flex: 1;">
+                            <input type="color" id="prop-bg-picker" title="Color Picker"
+                                style="width: 40px; height: 30px;">
+                        </div>
+                    </label>
+
+                    <label>
+                        Text
+                        <input type="text" id="prop-text">
+                    </label>
+
+                    <label>
+                        Text Color
+                        <div style="display: flex; gap: 4px; align-items: center;">
+                            <input type="text" id="prop-text-color" placeholder="#000 or rgba(0,0,0,1)"
+                                style="flex: 1;">
+                            <input type="color" id="prop-text-color-picker" title="Color Picker"
+                                style="width: 40px; height: 30px;">
+                        </div>
+                    </label>
+                </div>
+            </section>
             <h3>Layers</h3>
             <ul id="layers-list">
-                
+
             </ul>
             <div class="layer-controls">
                 <button id="layer-up">Move Up</button>
                 <button id="layer-down">Move Down</button>
             </div>
 
-            <section class="panel properties-panel">
-                <h3>Properties</h3>
-
-                <label>
-                    Width
-                    <input type="number" id="prop-width">
-                </label>
-
-                <label>
-                    Height
-                    <input type="number" id="prop-height">
-                </label>
-
-                <label>
-                    Background
-                    <input type="color" id="prop-bg">
-                </label>
-
-                <label>
-                    Text
-                    <input type="text" id="prop-text">
-                </label>
-            </section>
         </aside>
 
 

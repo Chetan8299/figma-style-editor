@@ -69,6 +69,27 @@
     cursor: grab;
 }
 
+#layers-list {
+    height: 50%;
+    overflow-y: scroll;
+    background: #1f2021;
+    padding: 1rem;
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+}
+
+::-webkit-scrollbar {
+    width: 0.2rem;
+    height: 100%;
+}
+
+.layer-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
 .layer-tile {
     display: flex;
     background-color: #3a3a3a;
@@ -99,4 +120,5 @@
     outline: none;
     border-radius: 0.2rem;
     font-size: 0.7rem;
+    margin-bottom: 1rem;
 }
