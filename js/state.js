@@ -18,7 +18,6 @@ export function addElement(type) {
         height: 50,
         rotation: 0,
         styles: {
-            zIndex: elemsData.elements.length + 1,
             backgroundColor: "white",
             color: "black"
         }
@@ -45,6 +44,33 @@ export function deleteElement(id) {
     elemsData.elements = elemsData.elements.filter(e => e.id != id)
     elemsData.selectedElementId = null
     saveElemsData()
+}
+
+export function setName(id, name) {
+    elemsData.elements = elemsData.elements.map(e => e.id == id ? { ...e, name } : e);
+    saveElemsData()
+}
+
+function getElementIndexById(id) {
+    return elemsData.elements.findIndex(e => e.id === id);
+}
+
+export function moveUp(id) {
+    let idx = getElementIndexById(id);
+    let newElements = elemsData.elements;
+    if (idx === 0) return;
+    [newElements[idx - 1], newElements[idx]] = [newElements[idx], newElements[idx - 1]];
+    elemsData.elements = newElements;
+    saveElemsData();
+}
+
+export function moveDown(id) {
+    let idx = getElementIndexById(id);
+    let newElements = elemsData.elements;
+    if (idx >= newElements.length - 1) return; // Already at the bottom
+    [newElements[idx + 1], newElements[idx]] = [newElements[idx], newElements[idx + 1]];
+    elemsData.elements = newElements;
+    saveElemsData();
 }
 
 export default elemsData;

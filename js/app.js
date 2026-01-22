@@ -1,16 +1,22 @@
-import elemsData, { addElement, selectElement, deSelectElement, updateElement, deleteElement } from "./state.js";
+import elemsData, { addElement, selectElement, deSelectElement, updateElement, deleteElement, setName, moveUp, moveDown } from "./state.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const addRectBtn = document.getElementById("add-rect");
     const addTextBtn = document.getElementById("add-text");
     const canvas = document.getElementById("canvas");
+    const layerList = document.getElementById("layers-list");
+    const layerUp = document.getElementById("layer-up");
+    const layerDown = document.getElementById("layer-down");
+
 
     addRectBtn.addEventListener("click", (elem) => {
         addElement('rect')
+        renderLayers();
         renderElements();
     })
     addTextBtn.addEventListener("click", () => {
         addElement('text')
+        renderLayers();
         renderElements();
     })
 
@@ -24,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         selectElement(el.id);
+        renderLayers()
         renderElements();
     })
 
@@ -41,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let startRotation = 0;
     let centerX, centerY;
 
-    canvas.addEventListener("mousedown", (e) => {
+    canvas.addEventListener("mousedown", e => {
         let rotationHandle = e.target.closest(".rotation-handle");
         if (rotationHandle) isRotating = true;
 
@@ -77,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
         startRotation = elemData.rotation;
     })
 
-    canvas.addEventListener("mousemove", (e) => {
+    canvas.addEventListener("mousemove", e => {
         if (!isResizing && !isDragging && !isRotating) return;
 
         const elemData = elemsData.elements.find(e => e.id === elemsData.selectedElementId)
@@ -153,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     })
 
-    document.addEventListener("keydown", (e) => {
+    document.addEventListener("keydown", e => {
         const elemData = elemsData.elements.find(e => e.id == elemsData.selectedElementId);
         const elem = document.getElementById(elemsData.selectedElementId);
 
@@ -175,13 +182,40 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         renderElements()
     })
+
+    layerList.addEventListener("click", e => {
+        const layerTile = e.target.closest(".layer-tile");
+        if (!layerTile) return;
+
+        layerTile.classList.add("layer-tile-selected")
+        selectElement(Number(layerTile.dataset.id))
+        renderElements();
+        renderLayers();
+    })
+
+    layerUp.addEventListener("click", () => {
+        let id = elemsData.selectedElementId;
+        if (id === null) return;
+        moveUp(Number(id));
+
+        renderLayers();
+        renderElements();
+    })
+
+    layerDown.addEventListener("click", () => {
+        let id = elemsData.selectedElementId;
+        if (id === null) return;
+        moveDown(Number(id));
+
+        renderLayers();
+        renderElements();
+    })
 })
 
 function renderElements() {
     const canvas = document.getElementById("canvas");
     canvas.innerHTML = "";
-
-    elemsData.elements.forEach(({ id, type, x, y, width, height, rotation, styles }) => {
+    elemsData.elements.forEach(({ id, type, x, y, width, height, rotation, styles }, idx) => {
         const div = document.createElement("div")
         div.id = id;
         div.classList.add("canvas-element", type);
@@ -191,6 +225,7 @@ function renderElements() {
         div.style.width = (typeof width === 'number' ? width : parseFloat(width)) + "px";
         div.style.height = (typeof height === 'number' ? height : parseFloat(height)) + "px";
         div.style.transform = `rotate(${Math.floor(rotation)}deg)`;
+        div.style.zIndex = elemsData.elements.length - (idx + 1);
         div.textContent = type == "text" ? type : "";
         for (let key in styles) {
             div.style[key] = styles[key];
@@ -218,5 +253,20 @@ function renderElements() {
     })
 }
 
+function renderLayers() {
+    const layerList = document.getElementById("layers-list");
+    layerList.innerHTML = "";
+    elemsData.elements.forEach((elem, idx) => {
+        const layerTile = document.createElement("li");
+        layerTile.classList.add("layer-tile");
+        if (elem.id == elemsData.selectedElementId) layerTile.classList.add("layer-tile-selected")
+        layerTile.dataset.id = elem.id;
+        layerTile.innerHTML = `
+                    ${elem.type === "text" ? '<i class="ri-t-box-line"></i>' : '<i class="ri-rectangle-line"></i>'}
+                    <div class="layer-name">${elem.name ? elem.name : `${elem.type} ${idx + 1}`}</div>`;
+        layerList.appendChild(layerTile);
+    })
+}
 
 renderElements()
+renderLayers()
