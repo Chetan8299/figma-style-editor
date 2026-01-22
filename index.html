@@ -28,38 +28,40 @@
                 <h3>Properties</h3>
 
                 <div class="props-container">
-                    <label class="width">
-                        <div>Width</div>
-                        <input type="number" id="prop-width">
-                    </label>
+                    <div class="dims">
+                        <label class="width">
+                            <div class="prop-title">width</div>
+                            <input type="number" id="prop-width">
+                        </label>
 
-                    <label class="height">
-                        <div>Height</div>
-                        <input type="number" id="prop-height">
-                    </label>
+                        <label class="height">
+                            <div class="prop-title">height</div>
+                            <input type="number" id="prop-height">
+                        </label>
+                    </div>
 
                     <label class="bgc">
-                        Background
-                        <div style="display: flex; gap: 4px; align-items: center;">
+                        <div class="prop-title">background</div>
+                        <div class="bgc-input">
                             <input type="text" id="prop-bg" placeholder="#fff or rgba(255,255,255,1)" style="flex: 1;">
                             <input type="color" id="prop-bg-picker" title="Color Picker"
-                                style="width: 40px; height: 30px;">
+                               >
                         </div>
                     </label>
-
+                    
                     <label>
-                        Text
-                        <input type="text" id="prop-text">
-                    </label>
-
-                    <label>
-                        Text Color
-                        <div style="display: flex; gap: 4px; align-items: center;">
+                         <div class="prop-title">text color</div>
+                        <div class="text-color-input">
                             <input type="text" id="prop-text-color" placeholder="#000 or rgba(0,0,0,1)"
                                 style="flex: 1;">
                             <input type="color" id="prop-text-color-picker" title="Color Picker"
-                                style="width: 40px; height: 30px;">
+                                >
                         </div>
+                    </label>
+                    
+                    <label>
+                         <div class="prop-title">text</div>
+                        <input type="text" id="prop-text">
                     </label>
                 </div>
             </section>
