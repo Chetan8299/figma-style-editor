@@ -154,6 +154,9 @@ document.addEventListener("DOMContentLoaded", () => {
             h = Math.max(20, h);
             updateElement({ id: elemData.id, x, y, width: w, height: h });
 
+            widthInput.value = Math.round(w);
+            heightInput.value = Math.round(h);
+
             renderElements();
             return;
         }
@@ -480,9 +483,21 @@ function renderElements() {
         div.style.height = (typeof height === 'number' ? height : parseFloat(height)) + "px";
         div.style.transform = `rotate(${Math.floor(rotation)}deg)`;
         div.style.zIndex = elemsData.elements.length - (idx + 1);
-        div.textContent = type == "text" ? (text || type) : "";
-        for (let key in styles) {
-            div.style[key] = styles[key];
+
+        // For text elements, wrap content in an inner div to prevent overflow
+        if (type === "text") {
+            const contentDiv = document.createElement("div");
+            contentDiv.classList.add("element-content");
+            contentDiv.textContent = text || type;
+            for (let key in styles) {
+                contentDiv.style[key] = styles[key];
+            }
+            div.appendChild(contentDiv);
+        } else {
+            div.textContent = "";
+            for (let key in styles) {
+                div.style[key] = styles[key];
+            }
         }
 
         if (elemsData.selectedElementId == id) {
